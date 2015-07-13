@@ -1,5 +1,4 @@
-### *An investigation of the applicability of new systems languages to the domain of High Performance Computing, using CloverLeaf*\*.
-===
+## *An investigation of the applicability of new systems languages to the domain of High Performance Computing, using CloverLeaf*\*.
 
 This is the main repository for my 3rd year dissertation project. In here the main report will be found, as well as sub-modules links to the implementations of the CloverLeaf mini-app that are involved with the dissertation.
 
