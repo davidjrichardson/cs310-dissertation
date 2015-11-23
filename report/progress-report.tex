@@ -1,0 +1,35 @@
+\documentclass[12pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{pgfplots}
+\usepackage{amsfonts}
+\usepackage{rotating}
+\usepackage{pdfpages}
+\frenchspacing
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[sorting=none,citestyle=ieee,backend=biber]{biblatex}
+\usepackage{pgfgantt}
+\usepackage{enumitem}
+\bibliography{progress-report}
+\pgfplotsset{compat=1.11}
+
+\title{Progress Report: Investigation into the use of hardware accelerators in data intensive compute}
+\author{David Richardson}
+\date{\today}
+
+\begin{document}
+	\maketitle
+
+	\section{Introduction} % (fold)
+	\label{sec:introduction}
+	
+	% section introduction (end)
+
+
+	\printbibliography
+
+	\includepdf[pages={1-12}]{specification.pdf}
+
+\end{document}
