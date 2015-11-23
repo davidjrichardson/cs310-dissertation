@@ -1,9 +1,0 @@
-[submodule "src/ref-serial"]
-	path = src/ref-serial
-	url = git@github.com:UK-MAC/CloverLeaf_Serial.git
-[submodule "src/ref-opencl"]
-	path = src/ref-opencl
-	url = git@github.com:UK-MAC/CloverLeaf_OpenCL.git
-[submodule "src/rust-serial"]
-	path = src/rust-serial
-	url = git@github.com:davidjrichardson/cloverleaf-rust.git
