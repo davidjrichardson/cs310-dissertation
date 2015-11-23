@@ -1,29 +1,256 @@
-\documentclass[12pt,a4paper]{IEEEtran}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+\usepackage{pgfplots}
 \usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{fancyhdr}
-% \usepackage[sorting=none]{biblatex}
+\usepackage{rotating}
+\frenchspacing
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage[sorting=none,citestyle=ieee,backend=biber]{biblatex}
+\usepackage{pgfgantt}
+\usepackage{enumitem}
+\bibliography{specification}
+\pgfplotsset{compat=1.11}
 
-\makeatletter
-\let\ps@IEEEtitlepagestyle\ps@fancy
-\makeatother
+\ganttset{calendar week text= \small {\startday/\startmonth}}
 
-\title{CS310 Project Specification}
-\author{David Richardson - 1314918}
-\date{\today} % TODO: Change this to something more reasonable when its actually complete.
+\title{Investigation into the use of hardware accelerators in data intensive compute}
+\author{David Richardson}
+\date{\today}
 
 \begin{document}
 	\maketitle
-	\pagestyle{fancy}
 
-	\fancyhf{}
-	\fancyhead[C]{CS310 Project Specification}
-	\fancyfoot[C]{\thepage}
+	This document presents a project on the research into the use of hardware accelerators in the data intensive compute paradigm. Whilst hardware accelerators are pervasive within the compute intensive paradigm of parallel computing, the use of them in data intensive compute remains an area of little research. section~\ref{sec:introduction} of this document provides the motivation for this project. section~\ref{sec:background} gives background information on the two key areas; data intensive compute and hardware accelerators. section~\ref{sec:objectives} outlines the objectives for this project. section~\ref{sec:methodology} explains the methodologies to be used throughout the project. section~\ref{sec:project_management} will discuss how the project will be managed. section~\ref{sec:legal_ethical_social_and_professional_issues} will outline any legal, ethical, social or professional issues that this project will cover. Finally, section~\ref{sec:conclusion} will conclude this document.
 
-	\setlength{\headheight}{14pt}
+	\section{Introduction} % (fold)
+	\label{sec:introduction}
 
-	\renewcommand{\headrulewidth}{0.4pt}
-	\renewcommand{\footrulewidth}{0.4pt}
+		Data analytics and the paradigm of data intensive compute are areas of parallel computing that are growing at enormous rates. The data avalanche in recent years has enabled ever-deepening study and research into areas such as biology, as well as commercial use such as Google's Knowledge Graph. The increase in compute power required to cope with this data avalanche is usually met with a scale-outwards approach, resulting in data centres with thousands of compute nodes. The research into the use of hardware accelerators here is underwhelming, and most software stacks do not have suitable provisions or APIs for their use. The applications of hardware accelerators could reduce program execution times, as well as increase power efficiency, being of interest to both academic and commercial applications. End users of services such as Google or Facebook could benefit from this due to new metadata obtained from previously slow computations.
+
+		\subsection{Project Aims} % (fold)
+		\label{sub:project_aims}
+
+			The underlying aim for this project is to investigate the use of hardware accelerators within data intensive compute. Their use within data intensive compute has value for both scientific and commercial areas. For example, warehouse scale compute facilities or data centres could drastically reduce the power requirements for the same computational capabilities. Results of compute jobs could be determined faster due to a reduction in compute time, to the benefit of scientific researchers.
+		
+		% subsection project_aims (end)
+	% section introduction (end)
+
+	\section{Background} % (fold)
+	\label{sec:background}
+
+		Having discussed the aims of my project, I will now go on to address the background knowledge required for this project. This  will include explanations of data intensive computing, hardware accelerators, the Chiron data analytics cluster and BigDataBench.
+
+		\subsection{Data Intensive Compute} % (fold)
+		\label{ssub:data_intensive_compute}
+		
+			Data intensive computing is an emerging computing paradigm~\cite{data-intensive-compute-paradigm} designed to deal with the processing of petabyte-scale datasets. It combines high performance computation, massive data storage, high bandwidth access, and high-speed local and wide area networking~\cite{parallel-data-intensive-compute} to address problems that were previously thought to be infeasible or impossible~\cite{cloud-computing-handbook} because the compute time would have previously been too long. The paradigm is dominated by the use of distributed computing clusters, and cloud computing has facilitated its use on a large scale~\cite{cloud-computing-handbook}. Data intensive compute typically uses Apache’s Hadoop, an implementation of Google’s MapReduce distributed batch computing white paper~\cite{data-science-big-data}. Other batch computing implementations are also available, such as LexisNexis’ High Performance Computing Cluster (HPCC). Other compute approaches to the paradigm are also available such as Apache Storm, which allows for realtime data stream computation~\cite{apache-storm}, and Apache Spark allows for in-memory data compute~\cite{apache-spark}. These different approaches are usually combined into a software stack to allow for a comprehensive suite of tools for data analysis.
+
+			The use of data intensive compute is diverse, ranging from the sequencing of genomes through genomics~\cite{genomics-big-data} to gain understanding of how genetic traits can alter suceptibility to diseases, to the analysis of social networks to produce further information about people and their connections to others to create a more personalised experience.
+
+		% subsubsection data_intensive_compute (end)
+	
+		\subsection{Hardware Accelerators} % (fold)
+		\label{sub:hardware_accelerators}
+
+			Hardware accelerators are specialised computer system components designed to complement the general purpose CPU within the system. These accelerators provide a wide range of benefits over a general purpose CPU architecture, such as x86. These benefits include increased power efficiency~\cite{energy-efficient-gpu}, measured as FLOPS/Watt, as well as significantly increased performance with specific workload types. An example of this is matrix product calculations~\cite{accelerating-matrix-product}. These characteristics has resulted in their uptake within the compute-intensive workloads, such as those in computational physics~\cite{computational-physics-gpu} and quantitative finance~\cite{quantitative-finance-gpu}. The most common types of hardware accelerators in use today are general-purpose GPU (GPGPU) and many integrated core (MIC) co-processors. Some examples of these are the Nvidia Tesla GPGPUs and the Intel MIC Xeon Phi co-processors. Other accelerator types are also available, such as Fully Programmable Gate Array (FPGA) cards from Altera.
+
+			Hardware accelerators have many benefits, but they can be underutilised if present in a system. This is usually a result of the accelerators being an afterthought in development or they are being used in workloads that they are not suited for. This can waste power, reducing their efficiency and overal effectiveness as part of a compute system.
+			
+		% subsection hardware_accelerators (end)
+
+		\subsection{Chiron} % (fold)
+		\label{sub:chiron}
+
+			Chiron is a compute cluster at the University of Warwick designed for data intensive compute~\cite{chiron-wisc-slides}. It provides the capability to perform traditional MapReduce computation, as well as data streaming and in-memory analytics. It also has 2x Nvidia Tesla K40 GPGPU nodes, 2x Intel Xeon Phis nodes, and 2x Nallatech 395 FPGA nodes. The cluster is configured using Apache YARN as a base, with the Hadoop File System (HDFS) for a distributed filesystem. MapR Hadoop is then used along with Apache Storm for bulk data analytics and data streaming, respectively.
+			
+		% subsection chiron (end)
+
+		\subsection{BigDataBench} % (fold)
+		\label{sub:bigdatabench}
+
+			BigDataBench is a data analytics benchmarking suite created at the ICT, Chinese Academy of Sciences, along with industry partners such as Huawei. The benchmarks abandon typical sequential and multithreaded workloads for scale-out~\cite{big-data-bench-home}. workloads that are designed to better represent the distributed nature of data analytics.
+
+			The benchmarks themselves are designed around a set of commonly used workloads that represent common use cases of data analytics. Some examples of these are social network and search engine graph analysis, multimedia analytics and bioinformatics. The benchmarks are also implemented with different systems to test as broad a range of a system as possible. These implementations range from Apache Hadoop or Spark, to MySQL, to C-based programs that use MPI~\cite{big-data-bench-home}. The suite also comes with its own data generation tool, designed to create huge data sets of different types under controllable generation rates~\cite{bdgs-paper}.
+		
+		% subsection big_data_bench (end)
+
+	% section background (end)
+
+	\section{Objectives} % (fold)
+	\label{sec:objectives}
+	
+		The objectives for my project are two-fold:
+
+		\begin{enumerate}
+			\item To understand if current benchmarking suites are suitable for hardware accelerated data analytics clusters.
+			\item To determine if accelerators can be used within data analytics with little modification to current software stacks or algorithm implementations.
+		\end{enumerate}
+
+		For objective 1 it is important to define what the notion of suitability is. For the purpose of this project, a benchmarking suite is suitable if it meets the following criteria:
+
+		\begin{itemize}
+			\item The suite tests a variety of workloads with differing characteristics.
+			\item The workloads make make use of accelerators if present on the system.
+			\item The size the input data set for can be varied or scaled.
+		\end{itemize}
+
+	% section objectives (end)
+
+	\section{Methodology} % (fold)
+	\label{sec:methodology}
+
+	My methodology for this project can be split into two parts: research and software development.
+
+	My software development methodology will be of a test-driven nature. This will allow for thorough testing of any (re)implementation of data analytics algorithms. The methodology will also be of an agile nature, allowing for changes to be made in the project during any software development stages that may arise~ \cite{sommverville-sweng}. The specific methodology to be used here will be Extreme Programming (XP)~\cite{sommverville-sweng}, allowing for the interleaving of development and testing of any software that is required. XP does require that the customer be involved every few weeks in the development cycle, but as this project is focused on research this is not feasible. Meetings shall also be set up during development on a regular basis with the project supervisor to make the most of this agile methodology.
+
+	For my research, I will be focusing on the Apache Hadoop software stack, which makes extensive use of the Java programming language though has support for other languages such as C++~\cite{mapreduce-tut-apache-hadoop}. I will also focus on GPGPU and MIC co-processors for the hardware accelerators in this project. These accelerators typically use C/C++ for programming, which may necessitate the use of the Java Native Interface (JNI) to execute any algorithm implementations designed for these accelerators.
+
+	My research methodology will start by selecting industry recognised benchmark(s) such as the BigDataBench benchmark for study. These benchmarks will have their data analytics workloads executed on the Chiron data analytics cluster to form a baseline for comparison. From there, I will attempt to make use of GPGPU and MIC accelerators within these benchmarks. From there I will benchmark the accelerated algorithms with the same data input sizes. Finally, I will compare the different benchmarks and draw conclusions with regards to the original objectives stated in section~\ref{sec:objectives}.
+	
+	% section methodology (end)
+
+	\section{Project Management} % (fold)
+	\label{sec:project_management}
+
+		Now that the discussion of the project’s aims, objectives, requirements and methodologies has been completed, attention is now to be given to the project management aspect of the project. More specifically, this section will discuss the project’s timetable, the resources required and give a risk assessment of the project, providing insight into any risk mitigations or actions to be taken.
+
+		\subsection{Timetable} % (fold)
+		\label{sub:timetable}
+		
+			Figure~\ref{fig:project-timetable} provides an overview of the project timeline. It includes the official project deadlines, as well as outlines the core stages of the project: benchmark selection, benchmark testing and analysis, benchmark migration, and accelerated benchmark testing and analysis. The benchmark migration stage may also contain a sub-stage for software development which will run at the same time. The timetable also provides task dependencies in the form of directional arrows between stages.
+
+			\begin{sidewaysfigure}
+				\centering
+				\begin{ganttchart}[
+					x unit=6mm,
+					hgrid,
+					vgrid,
+					newline shortcut=true,
+					time slot format=simple,
+					bar/.append style={fill=green!15},
+					bar label node/.append style={align=left},
+					milestone inline label node/.append style={right=2mm},
+					milestone/.append style={fill=red}
+				]{1}{30}
+					\gantttitle{2015}{12}
+					\gantttitle{2016}{18} \\
+					\gantttitle{Time (in weeks)}{30} \\
+					\gantttitlelist{1,...,30}{1} \\
+					\ganttbar{Benchmark selection}{1}{3}
+					\ganttbar[bar/.append style={fill=red!25}]{}{4}{4} \ganttnewline
+					\ganttlinkedbar{Benchmark testing \ganttalignnewline
+						and analysis}{5}{8}
+					\ganttbar[bar/.append style={fill=red!25}]{}{9}{9} \ganttnewline
+					\ganttlinkedbar{Benchmark migration}{10}{14}
+					\ganttbar[bar/.append style={fill=red!25}]{}{15}{15} \ganttnewline
+					\ganttlinkedbar{Accelerated benchmark \ganttalignnewline
+						testing and analysis}{16}{17}
+					\ganttbar[bar/.append style={fill=red!25}]{}{18}{18}
+					\ganttlinkedmilestone[inline=true, milestone/.append style={fill=green}]{Research complete}{19} \ganttnewline[thick, black]
+					\ganttbar[bar/.append style={fill=blue!15}]{Project specification}{1}{2} 
+					\ganttmilestone[inline=true]{Submission}{2} \ganttnewline
+					\ganttbar[bar/.append style={fill=blue!15}]{Progress report}{6}{8}
+					\ganttlinkedmilestone[inline=true]{Submission}{9} \ganttnewline
+					\ganttbar[bar/.append style={fill=blue!15}]{Presentation prep.}{17}{21} 
+					\ganttlinkedmilestone[inline=true]{Presentation}{23} \ganttnewline
+					\ganttbar[bar/.append style={fill=blue!15}]{Final report}{11}{29}
+					\ganttlinkedmilestone{}{30}
+				\end{ganttchart}
+				\caption{Project timetable from week 1 term 1 to week 1 term 3}
+				\label{fig:project-timetable}		
+			\end{sidewaysfigure}
+
+			\begin{itemize}
+				\item Benchmark selection: 5th October 2015 to 1st November 2015
+				\item Benchmark testing and analysis: 2nd November 2015 to 30th November 2015
+				\item Benchmark migration: 1st December 2015 to 31st January 2016
+				\item Accelerated benchmark testing and analysis: 1st February 2016 to 14th February 2016
+				\item Project specification write up: 5th October 2015 to 14th October 2015
+				\item Project specification submission: 15th October 2015
+				\item Progress report write up: 15th November 2015 to 28th November 2015
+				\item Progress report submission: 30th November 2015
+				\item Presentation preparation: 8th February 2016 to 7th March 2016
+				\item Presentation: 7-9th March 2016
+				\item Final report write up: 10th January 2016 - 21st April 2016
+				\item Final report submission: 28th April 2016
+			\end{itemize}
+
+		% subsection timetable (end)
+
+		\subsection{Tools \& Resources} % (fold)
+		\label{sub:tools_resources}
+			
+			Third party tools will be used wherever possible to speed up the process of research as well as its documentation. This will include:
+
+			\begin{description}[style=nextline]
+				\item[\textbf{Git VCS}] This version control system, along with GitHub, will provide a mechanism of recording previous and current versions of the project in a centralised location.
+				\item[\textbf{Nvidia CUDA Toolkit}] The Nvidia CUDA toolkit will be a vital tool for any development of data analytics algorithms for use with Nvidia Tesla GPGPUs. It provides a wide range of language bindings, giving the ability to use accelerators with ease in the Apache data analytics software stack.
+				\item[\textbf{IntelliJ IDEA}] This development IDE will prove to be very beneificial during the migration of benchmarks to accelerators. It has many language plugins as well as native test integration, aiding the test driven development methodology previously discussed.
+				\item[\textbf{LaTeX}] LaTeX is to be used as the means to produce the documentation for the project. It provides a way to create professional looking documents with easy, whilst also being powerful enough to display any extensive findings without the need for more 3rd party tools.
+			\end{description}
+
+			Along with these tools, the following resources will be crucial to perform the research:
+
+			\begin{description}[style=nextline]
+				\item[\textbf{Chiron}] Chiron is an Apache YARN-based data analytics cluster with accessible GPGPU and MIC accelerators. This is useful because it will allow the benchmarking of accelerated and un-accelerated programs on the same cluster.
+			\end{description}
+
+		% subsection tools_resources (end)
+
+		\subsection{Risk Assessment} % (fold)
+		\label{sub:risk_assessment}
+
+			Figure~\ref{fig:risk_matrix} provides an overview of possible risks throughout the project, as well as their severities and any possible actions that could be taken to mitigate or prevent them from occurring.
+
+			\begin{figure}
+				\begin{center}
+					\begin{tabular}{| p{3cm} | l | l | p{4cm} |}
+						\hline
+						Risk & Severity & Likelihood & Mitigating Action(s) \\ \hline
+						Chiron unavailable & \cellcolor{red!15} Severe & \cellcolor{green!25} 0.01\% & Locate suitable replacement for use in testing --- replacement should have similar feature set to Chiron. \\ \hline
+						Benchmark code unavailable & \cellcolor{red!15} Severe & \cellcolor{yellow!15} 5\% & Check internet archives for possible location of older version. Find other suitable benchmarks. \\ \hline
+						Networking failure & \cellcolor{orange!15} Moderate-Severe & \cellcolor{yellow!15} 5\% & Temporarily locate to different area to use a different network. \\ \hline
+						Project leader falling ill & \cellcolor{yellow!15} Moderate & \cellcolor{orange!15} 10\% & Do work that can be done without further risk to health. \\ \hline
+					\end{tabular}
+				\end{center}
+
+				\caption{Risk matrix that associates possible risks with severity and mitigating actions}
+				\label{fig:risk_matrix}
+			\end{figure}
+		
+		% subsection risk_assessment (end)
+	% section project_management (end)
+
+	\section{Legal, Ethical, Social and Professional Issues} % (fold)
+	\label{sec:legal_ethical_social_and_professional_issues}
+		For the project there are a few professional and legal issues that must be addressed. There are, however, no social or ethical issues to be discussed.
+
+		\subsection{Professional Issues} % (fold)
+		\label{sub:professional_issues}
+		
+			The project must be completed to a professional standard to ensure it can be extended in further research as well as used commercially. This will involve thorough testing of any new code, along with complete documentation through code commenting. Project documentation should also be of a high standard.
+
+		% subsection professional_issues (end)
+
+		\subsection{Legal Issues} % (fold)
+		\label{sub:legal_issues}
+			
+			The project will be utilising free, open-source software (FOSS) under varying licenses such as the Apache 2 license. Any software development libraries used within the project, such as the Nvidia CUDA toolkit, will also be under their own license agreements. These agreements will need to be adhered to.
+
+		% subsection legal_issues (end)
+	% section legal_ethical_social_and_professional_issues (end)
+
+	\section{Conclusion} % (fold)
+	\label{sec:conclusion}
+
+		The underpinning aim of this project is to investigate the use of hardware accelerators within data intensive compute. Acting towards this goal, a set of methodologies, management practices and test plans have been established and adopted to best attain the achievement of the stated goal. Furthermore, the refinement of the defined requirements is to be considered throughout the early stages of the project.
+
+		The progress towards the goals of this project will be documented in the next deliverable; the progress review. This document will be completed for and available on the 30th November 2015.
+	
+	% section conclusion (end)
+
+	\printbibliography
 \end{document}
