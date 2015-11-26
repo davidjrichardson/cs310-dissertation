@@ -1,4 +1,4 @@
-\documentclass[12pt,a4paper]{report}
+\documentclass[12pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[usenames,dvipsnames,table]{xcolor}
@@ -12,24 +12,149 @@
 \usepackage[sorting=none,citestyle=ieee,backend=biber]{biblatex}
 \usepackage{pgfgantt}
 \usepackage{enumitem}
+\usepackage[toc,page]{appendix}
 \bibliography{progress-report}
 \pgfplotsset{compat=1.11}
 
-\title{Progress Report: Investigation into the use of hardware accelerators in data intensive compute}
-\author{David Richardson}
-\date{\today}
+\title{Investigation Into the Use of Hardware Accelerators in Data Intensive Compute}
+\author{CS310 Progress Report\\David Richardson, 1314918}
+\date{November 2015}
 
 \begin{document}
 	\maketitle
+	
+	This document details the progress made in the investigation into the use of hardware accelerators in data intensive compute. Section \ref{sec:introduction} reintroduces the project and its aims as well as giving a summary of the project's objectives. Section \ref{sec:research_direction} identifies existing research in the project's problem domain. Section \ref{sec:benchmarking_progress} details the selection of the benchmarks to be used in the project, as well as any progress to the successful benchmarking of the cluster without hardware accelerators. Section \ref{sec:project_management} reiterates the approach to project management in the project specification, outlining any necessary changes that have been brought to light through the work so far. Section \ref{sec:further_work_project_extensions} outlines further work and extensions to the project. Finally, Section \ref{sec:conclusion} concludes by outlining the overall state of the project as well as reiterating the key points of the project's progression. More information about the specification of this project is available in the specification documentation in Appendix \ref{app:specification}.
 
-	\section{Introduction} % (fold)
+	\section{Introduction}
 	\label{sec:introduction}
 	
-	% section introduction (end)
-
+	    Hardware accelerators provide the ability to offload a set of compute instructions from the CPU onto specialised hardware, designed to perform the computation faster and more efficiently than the CPU itself. These accelerators generally take the forms of General Purpose GPUs (GPGPUs) or Many Integrated Core (MIC) co-processors. With these hardware accelerators being included in an ever-increasing number of compute nodes within data centres, the chance to use them is increasing. However, the amount of research into their use within the paradigm of data intensive compute is underwhelming, despite their possible gains in power efficiency~\cite{energy-efficient-gpu} and speed~\cite{accelerating-matrix-product, quantitative-finance-gpu} over their general CPU counterparts. The integration of these hardware accelerators into the compute phases of data intensive workloads, such as MapReduce jobs, could provide benefits such as a reduction in the total compute time and power consumed by a workload. Other possible benefits involve a reduced need to scale outwards to cope with the Tera- or Petabyte scale data sets that have come about from the data avalanche in areas such as bioinformatics~\cite{big-data-biocuration}. These benefits are of interest to both academic and commercial applications, where it can reduce operational costs and reduce turn around time for compute workloads. Organisations such as that provide data-centric services such as Google or Facebook would also be able to enrich user experience with features that were not feasible due to slow compute times, also providing an increased value of service and profit.
+	
+	    \subsection{Project Aims}
+	    \label{sub:project_aims}
+	    
+	        The underlying aim for this project is to test the use of GPGPUs and MIC co-processors in data intensive workloads to determine if their integration has significant improvements in compute and power consumption versus a CPU-only implementation. Their use has value for scientific and commercial areas, where a reduction in compute time will generally lead to a reduction in operational costs. It will also benefit infrastructure management companies such as Amazon, by increasing the performance per Watt of their compute nodes.
+	        
+	    \subsection{Summary of Objectives}
+	    \label{sub:summary_of_objectives}
+	    
+	        The project has two main objectives that were outlined in the project specficiation documentation:
+	        
+	        \begin{enumerate}
+	        \item To understand if current benchmarking suites are suitable for hardware accelerated data analytics clusters.
+	        \item To determine if accelerators can be used within data analytics with little modification to current software stacks or algorithm implementations.
+	        \end{enumerate}
+	        
+	        Where the notion of a `suitable' benchmark is a benchmark that tests a variety of work loads, makes use of any present hardware accelerators, and can be scaled in input data set size.
+	    
+    \section{Research Direction}
+    \label{sec:research_direction}
+    
+        With the project introduced, the main aims for its research and the project's objectives all discussed, the area of related research is now considered.
+    
+        Research into the use of GPGPU and MIC co-processors within data intensive compute is limited at best, with very few technical reports or articles available.
+        
+        \subsection{Accelerating Breadth-First Search with Intel MIC Co-processors}
+        \label{sub:accelerating_bfs_with_mic}
+        
+            Tao, Yutong, and Guang provide research into the application of the Intel MIC co-processor architecture to the Breadth-First Search (BFS) of a graph, a common data intensive compute workload. Their research considers both native and offload optimisations, outlining their optimisation procedures for both~\cite{mic-accelerate-bfs}. The native solution involves performing the BFS entirely on the co-processor and the optimisation techniques involved the exploitation of thread- and data-level parallelism. The offload solution will partition the tasks within the workload as well optimise communications between CPU and co-processor. They found that a native solution could run up to 3.4x faster on two Intel Xeon Phi Knight's Corner than when run on two Intel Xeon E5-2670. The offload algorithm results in a speed up of up to 1.67x. The offload algorithm also gains performance on larger graph sizes.
+    
+    \section{Benchmarking Progress}
+    \label{sec:benchmarking_progress}
+    
+        With the nature of this project being mostly based around investigation and research, it is quite hard to measure its progress. However, it is possible to measure progress with regards to the timetable outlined in the project specification, where it lists the key phases to the project. The progress towards benchmark selection and execution is now to be discussed.
+    
+        \subsection{Benchmark Selection}
+        \label{sub:benchmark_selection}
+        
+            There are a number of benchmarking suites available for use with compute clusters designed for the likes of data analytics or other data intensive compute workloads. For this project I will be selecting one benchmarking suite for use to compare the effect of the integration of hardware accelerators into them.
+            
+            Through my investigation into these benchmarks, a few observations have been made:
+            
+            \begin{enumerate}
+            \item Most benchmarking suites come with their own scalable data generators.
+            \item All benchmarking suites that have been considered are developed for MapReduce or similar compute workloads.
+            \item All benchmarking suites investigated have not been built with the consideration for the use hardware accelerators.
+            \end{enumerate}
+            
+            These observations can be used to conclude about objective 1 that was outlined in the project specification. This is that the current suite of benchmarks are not suitable for hardware accelerated data intensive compute clusters. This is due to the lack of consideration within the benchmarking suites, when developed, for the use of hardware accelerators like GPGPUs and MIC co-processors.
+            
+            With this in mind, the benchmarking suites that were considered are now discussed and compared.
+    
+            \subsubsection{Graph500}
+            \label{ssub:graph500}
+            
+                
+            
+            % Seems to be de facto standard
+            % Only has one workload: graph BFS traversal
+        
+            \subsubsection{BigDataBench}
+            \label{ssub:bigdatabench}
+            
+            % Does lots of stuff. like lots. ref technical report on dwarf workloads here.
+            % Many workloads can be mapped to GPUs
+            % Implementations on alternative data analytics frameworks (Spark, Mahout)
+            
+            \subsubsection{Intel HiBench}
+            \label{ssub:intel_hibench}
+            
+            % Does similar workloads to BigDataBench. Different workloads are database-based and don't really map to GPU use cases.
+            
+            \subsubsection{Comparison and Conclusion}
+            \label{ssub:comparison_and_conclusion}
+            
+            % All benchmarks haven't been developed with the prospect of hardware accelerators even being considered
+            % BigDataBench has been selected, reasons explained here
+            
+        \subsection{Benchmark Running}
+        \label{sub:benchmark_running}
+        
+        % Chiron has HDD/SSD storage - this could affect compute as data-intensive compute is IO bound
+        % Compare InfiniBand to M.2/PCI-E 3.0 4x and SATA III standards to show storage IO is bottleneck instead of network throughput
+        % Problems have been met mapping benchmark executables to Chiron's architecture (hadoop location, Chiron doesn't have some example jars, different storage architecture
+    
+    \section{Project Management}
+    \label{sec:project_management}
+    
+        \subsection{Timetable}
+        \label{sub:timetable}
+        
+        % Talk about where we are in the original timetable, as well as what changes may need to be made to accomodate for problems with Chiron
+        
+        \subsection{Risk Assessment}
+        \label{sub:risk_assessment}
+        
+        % Add finding a bug in Chiron to risk assessment as it has caused issues before
+        
+    \section{Further Work and Project Extensions}
+    \label{sec:further_work_project_extensions}
+    
+        \subsection{Further Work}
+        \label{sub:further_work}
+        
+        % What to do from here?
+        
+        \subsection{Project Extensions}
+        \label{sub:project_extensions}
+        
+        % Who can benefit from this work?
+        
+    \section{Conclusion}
+    \label{sec:conclusion}
+    
+    % Talk about how the project is running wrt. timetable, giving reasons why
+    % Outline key stages of progression (see to Gantt chart)
+    % Give next stages of progression in project
 
 	\printbibliography
-
-	\includepdf[pages={1-12}]{specification.pdf}
+	
+	\begin{appendix}
+	    \section{Investigation Into the Use of Hardware Accelerators in Data Intensive Compute Specification}
+	    The following 12 pages consist of the original specification document as submitted to Tabula in Week 2 of Term 1, 2015
+	    \label{app:specification}
+	    
+	        \includepdf[pages={1-12}, templatesize={16cm}{25.5cm}, frame=true]{specification.pdf}
+	\end{appendix}
 
 \end{document}
