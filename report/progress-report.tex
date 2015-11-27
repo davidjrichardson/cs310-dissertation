@@ -84,28 +84,25 @@
             \subsubsection{Graph500}
             \label{ssub:graph500}
             
-                
-            
-            % Seems to be de facto standard
-            % Only has one workload: graph BFS traversal
+                The Graph 500 is an initiative to establishe a set of large-scale benchmarks for data intensive applications, being backed by both academia and industry experts~\cite{graph500-intro}. At present, the Graph 500 benchmark has only one workload that can be split into two kernels: generating a graph from an edge list, and a breadth-first search of the generated graph~\cite{graph500-spec}. The second kernel is measured in Traversed Edges per Second (TEPS), which provides a unit for comparison akin to LINPACK with Floating Point Operations per Second (FLOPS). The reference implementations provided by the Graph 500 organisation are written in C and are available in sequential, OpenMP, XMT and MPI~\cite{graph500-reference-impl}.
         
             \subsubsection{BigDataBench}
             \label{ssub:bigdatabench}
-            
-            % Does lots of stuff. like lots. ref technical report on dwarf workloads here.
-            % Many workloads can be mapped to GPUs
-            % Implementations on alternative data analytics frameworks (Spark, Mahout)
+
+            	BigDataBench is a data analytics benchmarking suite created at the ICT, Chinese Academy of Sciences, with backing from industry partners such as Huawei. The benchmarks in this suite abandon typical sequential and multithreaded workloads, that would typically use OpenMP or similar libraries, for scale-out~\cite{big-data-bench-home} workloads that are designed to better represent the distributed nature of data analytics. The benchmarks themselves in this suite are derived from a common subset of `dwarf' workloads, such as social network graph analysis or word multimedia analytics~\cite{dwarf-workloads-big-data}. These benchmarks are implemented using different technologies ranging from Apache Hadoop or Spark, to MySQL and C-based programs that use MPI for inter-node communications~\cite{big-data-bench-home}.
             
             \subsubsection{Intel HiBench}
             \label{ssub:intel_hibench}
             
-            % Does similar workloads to BigDataBench. Different workloads are database-based and don't really map to GPU use cases.
+            % Does similar workloads to BigDataBench.
             
             \subsubsection{Comparison and Conclusion}
             \label{ssub:comparison_and_conclusion}
             
             % All benchmarks haven't been developed with the prospect of hardware accelerators even being considered
             % BigDataBench has been selected, reasons explained here
+            % HiBench uses different workloads are database-based and don't really map to GPU use cases.
+            % Graph500 only uses OpenMP/MPI - doesn't consider MapReduce style workloads
             
         \subsection{Benchmark Running}
         \label{sub:benchmark_running}
