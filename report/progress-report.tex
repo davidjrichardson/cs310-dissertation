@@ -85,7 +85,7 @@
             \subsubsection{Graph500}
             \label{ssub:graph500}
             
-                The Graph500 is an initiative to establishe a set of large-scale benchmarks for data intensive applications, being backed by both academia and industry experts~\cite{graph500-intro}. At present, the Graph500 benchmark has only one workload that can be split into two kernels: generating a graph from an edge list, and a breadth-first search of the generated graph~\cite{graph500-spec}. The second kernel is measured in Traversed Edges per Second (TEPS), which provides a unit for comparison akin to LINPACK with Floating Point Operations per Second (FLOPS). The reference implementations provided by the Graph500 organisation are written in C and are available in sequential, OpenMP, XMT and MPI~\cite{graph500-reference-impl}.
+                The Graph500 is an initiative to establish a set of large-scale benchmarks for data intensive applications, being backed by both academia and industry experts~\cite{graph500-intro}. At present, the Graph500 benchmark has only one workload that can be split into two kernels: generating a graph from an edge list, and a breadth-first search of the generated graph~\cite{graph500-spec}. The second kernel is measured in Traversed Edges per Second (TEPS), which provides a unit for comparison akin to LINPACK with Floating Point Operations per Second (FLOPS). The reference implementations provided by the Graph500 organisation are written in C and are available in sequential, OpenMP, XMT and MPI~\cite{graph500-reference-impl}.
         
             \subsubsection{BigDataBench}
             \label{ssub:bigdatabench}
@@ -94,16 +94,27 @@
             
             \subsubsection{Intel HiBench}
             \label{ssub:intel_hibench}
-            
-            % Does similar workloads to BigDataBench.
+
+                Intel's HiBench Hadoop benchmarking suite is a suite of 10 hadoop-based MapReduce benchmarks that are both synthetic micro-benchmarks and real-world applications~\cite{hibench-techreport}. It uses the following 5 characteristings when benchmarking a system:
+
+                \begin{itemize}
+                    \item Job running time.
+                    \item Number of tasks per minute or job throughput.
+                    \item HDFS bandwidth.
+                    \item Utilisation of system resources like CPU, Memory and I/O.
+                    \item Data access patterns
+                \end{itemize}
+
+                The suite itself only provides implementations to use Apache's Hadoop framework. The workloads cover web search, machine learning and analytical querying on large data sets. The micro-benchmarks cover basic jobs such as data sorting or extraction of information about a large data set. The suite also includes a benchmark to help determine the aggregated bandwidth that is delivered by HDFS~\cite{hibench-techreport-2}.
             
             \subsubsection{Comparison and Conclusion}
             \label{ssub:comparison_and_conclusion}
-            
-            % All benchmarks haven't been developed with the prospect of hardware accelerators even being considered
-            % BigDataBench has been selected, reasons explained here
-            % HiBench uses different workloads are database-based and don't really map to GPU use cases.
-            % Graph500 only uses OpenMP/MPI - doesn't consider MapReduce style workloads
+
+                With all the benchmarks considered for this project outlined above, they are compared and a suite will be selected.
+
+                Whilst the Graph500 benchmark is backed by both industry leaders and academics alike, its suite contains only one benchmark that is not wholly representative of data intensive workloads. Its implementation in C and using MPI would make the use of hardware accelerators easier on more traditional compute oriented clusters. However, due to Chiron's architecture and chosen software stack, the use of MPI and/or OpenMP would not suit MapReduce and thus the suite will not be used for this project.
+
+                BigDataBench and Intel HiBench both provide extensive suites of benchmarks that can be separated into micro-benchmarks and workloads that are representative of what you would find in use in the real world. BigDataBench has the overall larger number of benchmarks available when compared to HiBench, and the benchmarking suite will also test more than just offline data analytics. It doesn't, however, provide the in-depth characterisation of the system that HiBench provides. With these considerations, Intel HiBench will be used for this project based upon its MapReduce workloads and in-depth benchmark reporting. It is also worth noting that all three benchmarks considered were not developed with the prospect of use with hardware accelerators.
             
         \subsection{Benchmark Running}
         \label{sub:benchmark_running}
@@ -192,7 +203,7 @@
                         Networking failure & \cellcolor{orange!15} Moderate-Severe & \cellcolor{yellow!15} 5\% & Temporarily locate to different area to use a different network. \\ \hline
                         Project leader falling ill & \cellcolor{yellow!15} Moderate & \cellcolor{orange!15} 10\% & Do work that can be done without further risk to health. \\ \hline
                         Configuration error with Chiron & \cellcolor{yellow!15} Moderate & \cellcolor{orange!15} 15\% & Report the bug using the Centre of Scientific Computing's BugZilla bug tracker. Attempt other work that doesn't depend on that particular software stack. \\ \hline
-                        Required software for benchmark not installed & \cellcolor{red!15} Severe & \cellcolor{yellow!15} 5\% & Report the missing software to the Centre of Scientific Computing. In event of no resolution, another benchmark will be selected. \\ \hline
+                        Required software for benchmark not installed & \cellcolor{orange!15} Moderate-Severe & \cellcolor{yellow!15} 5\% & Report the missing software to the Centre of Scientific Computing. In event of no resolution, another benchmark will be selected. \\ \hline
                     \end{tabular}
                 \end{center}
 
@@ -228,6 +239,7 @@
             \begin{description}[style=nextline]
                 \item[\textbf{Additional Accelerator Types}] The research in this project is aimed only at GPGPU and MIC co-processor hardware accelerators, but other types such as Fully Programmable Gate Array (FPGA) or Application-specific Integrated Circuit (ASIC) accelerators could be used as well. These have the benefit of being highly optimised for a specific task, although this also acts as a limitation as ASICs cannot be reprogrammed to perform another type of workload, and FPGAs have a high development overhead associated with long program compilation times and difficulty with debugging.
                 \item[\textbf{Infrastructure Design}] This project's outcome could inform infrastructure providers such as Amazon or Google about the benefits to installing hardware accelerators into their compute nodes. This could reduce operational costs through the increased power efficiency of hardware accelerators. Compute time could also be drastically reduced, thus the number of users of the service could increase. Finally, the total number of compute nodes required for the same performance could drop, resulting in a reduced investment when purchasing infrastructure.
+                \item[\textbf{Additional Workload Testing}] 
             \end{description}
         
     \section{Conclusion}
@@ -244,7 +256,7 @@
 	    The following 12 pages consist of the original specification document as submitted to Tabula in Week 2 of Term 1, 2015
 	    \label{app:specification}
 	    
-	        \includepdf[pages={1-12}, templatesize={16cm}{25.5cm}, frame=true]{specification.pdf}
+	        % \includepdf[pages={1-12}, templatesize={16cm}{25.5cm}, frame=true]{specification.pdf}
 	\end{appendix}
 
 \end{document}
