@@ -84,7 +84,7 @@
             \subsubsection{Graph500}
             \label{ssub:graph500}
             
-                The Graph 500 is an initiative to establishe a set of large-scale benchmarks for data intensive applications, being backed by both academia and industry experts~\cite{graph500-intro}. At present, the Graph 500 benchmark has only one workload that can be split into two kernels: generating a graph from an edge list, and a breadth-first search of the generated graph~\cite{graph500-spec}. The second kernel is measured in Traversed Edges per Second (TEPS), which provides a unit for comparison akin to LINPACK with Floating Point Operations per Second (FLOPS). The reference implementations provided by the Graph 500 organisation are written in C and are available in sequential, OpenMP, XMT and MPI~\cite{graph500-reference-impl}.
+                The Graph500 is an initiative to establishe a set of large-scale benchmarks for data intensive applications, being backed by both academia and industry experts~\cite{graph500-intro}. At present, the Graph500 benchmark has only one workload that can be split into two kernels: generating a graph from an edge list, and a breadth-first search of the generated graph~\cite{graph500-spec}. The second kernel is measured in Traversed Edges per Second (TEPS), which provides a unit for comparison akin to LINPACK with Floating Point Operations per Second (FLOPS). The reference implementations provided by the Graph500 organisation are written in C and are available in sequential, OpenMP, XMT and MPI~\cite{graph500-reference-impl}.
         
             \subsubsection{BigDataBench}
             \label{ssub:bigdatabench}
@@ -113,16 +113,91 @@
     
     \section{Project Management}
     \label{sec:project_management}
+
+        Having discussed the progress made in the project, attention is now turned to the project's management as well as where any changes to the project timetable or risk assessment will be considered.
     
         \subsection{Timetable}
         \label{sub:timetable}
+
+            With Chiron remaining in a pre-production state, it is not without configuration errors and has a lack of user documentation. These issues will, as a result, add possible delays to the project as it moves forwards and the use of untested system components starts to occur. Fortunately the project timetable as given in the specification documentation has some contingencies built into it, in the form of task padding zones marked in red, as well as extra amount of time that allows the project to overrun without issue. Figure~\ref{fig:project-timetable} shows where the project is currently, with any complete tasks in violet. The overrun allowances for benchmark testing and accelerated benchmark testing and analysis have been extended, as well.
+
+            \begin{sidewaysfigure}
+                    \centering
+                    \begin{ganttchart}[
+                        x unit=6mm,
+                        hgrid,
+                        vgrid,
+                        newline shortcut=true,
+                        time slot format=simple,
+                        bar/.append style={fill=green!15},
+                        bar label node/.append style={align=left},
+                        milestone inline label node/.append style={right=2mm},
+                        milestone/.append style={fill=red},
+                        today=9,
+                        today offset=0.075,
+                        today label=Current Week,
+                        today label node/.append style={anchor=north west},
+                        today label font=\itshape\color{red},
+                        today rule/.style={draw=blue, ultra thick}
+                    ]{1}{30}
+                        \gantttitle{2015}{12}
+                        \gantttitle{2016}{18} \\
+                        \gantttitle{Time (in weeks)}{30} \\
+                        \gantttitlelist{1,...,30}{1} \\
+                        \ganttbar[bar/.append style={fill=violet!25}]{Benchmark selection}{1}{4} \ganttnewline
+                        \ganttlinkedbar{Benchmark testing \ganttalignnewline
+                            and analysis}{5}{8}
+                        \ganttbar[bar/.append style={fill=red!25}]{}{9}{10} \ganttnewline
+                        \ganttlinkedbar{Benchmark migration}{11}{14}
+                        \ganttbar[bar/.append style={fill=red!25}]{}{15}{15} \ganttnewline
+                        \ganttlinkedbar{Accelerated benchmark \ganttalignnewline
+                            testing and analysis}{16}{17}
+                        \ganttbar[bar/.append style={fill=red!25}]{}{18}{19}
+                        \ganttlinkedmilestone[inline=true, milestone/.append style={fill=green}]{Research complete}{20} \ganttnewline[thick, black]
+                        \ganttbar[bar/.append style={fill=violet!25}]{Project specification}{1}{2} 
+                        \ganttmilestone[inline=true, milestone/.append style={fill=magenta}]{Submission}{2} \ganttnewline
+                        \ganttbar[bar/.append style={fill=violet!25}]{Progress report}{6}{8}
+                        \ganttmilestone[inline=true, milestone/.append style={fill=magenta}]{Submission}{8} \ganttnewline
+                        \ganttbar[bar/.append style={fill=blue!15}]{Presentation prep.}{17}{21} 
+                        \ganttlinkedmilestone[inline=true]{Presentation}{23} \ganttnewline
+                        \ganttbar[bar/.append style={fill=blue!15}]{Final report}{11}{29}
+                        \ganttlinkedmilestone{}{30}
+                    \end{ganttchart}
+                    \caption{Revised project timetable from week 1 term 1 to week 1 term 3}
+                    \label{fig:project-timetable}       
+                \end{sidewaysfigure}
         
         % Talk about where we are in the original timetable, as well as what changes may need to be made to accomodate for problems with Chiron
         
         \subsection{Risk Assessment}
         \label{sub:risk_assessment}
-        
-        % Add finding a bug in Chiron to risk assessment as it has caused issues before
+
+            In an ideal world, Chiron would have had user documentation generated and have been tested thoroughly. However, due to it being in pre-production mode, it is necessary to add the following risks to the risk matrix provided in the project specification documentation:
+
+            \begin{itemize}
+                \item A confuration error with Chiron's software stack.
+                \item Software required to run a benchmark is not installed.
+            \end{itemize}
+
+            The amended risk matrix, with the risks mentioned above, is shown in figure~\ref{fig:risk_matrix}.
+
+            \begin{figure}
+                \begin{center}
+                    \begin{tabular}{| p{3cm} | l | l | p{4cm} |}
+                        \hline
+                        Risk & Severity & Likelihood & Mitigating Action(s) \\ \hline
+                        Chiron unavailable & \cellcolor{red!15} Severe & \cellcolor{green!25} 0.01\% & Locate suitable replacement for use in testing --- replacement should have similar feature set to Chiron. \\ \hline
+                        Benchmark code unavailable & \cellcolor{red!15} Severe & \cellcolor{yellow!15} 5\% & Check internet archives for possible location of older version. Find other suitable benchmarks. \\ \hline
+                        Networking failure & \cellcolor{orange!15} Moderate-Severe & \cellcolor{yellow!15} 5\% & Temporarily locate to different area to use a different network. \\ \hline
+                        Project leader falling ill & \cellcolor{yellow!15} Moderate & \cellcolor{orange!15} 10\% & Do work that can be done without further risk to health. \\ \hline
+                        Configuration error with Chiron & \cellcolor{yellow!15} Moderate & \cellcolor{orange!15} 15\% & Report the bug using the Centre of Scientific Computing's BugZilla bug tracker. Attempt other work that doesn't depend on that particular software stack. \\ \hline
+                        Required software for benchmark not installed & \cellcolor{red!15} Severe & \cellcolor{yellow!15} 5\% & Report the missing software to the Centre of Scientific Computing. In event of no resolution, another benchmark will be selected. \\ \hline
+                    \end{tabular}
+                \end{center}
+
+                \caption{Risk matrix that associates possible risks with severity and mitigating actions}
+                \label{fig:risk_matrix}
+            \end{figure}
         
     \section{Further Work and Project Extensions}
     \label{sec:further_work_project_extensions}
