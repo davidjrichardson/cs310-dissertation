@@ -11,6 +11,7 @@
 \usepackage{graphicx}
 \usepackage[sorting=none,citestyle=ieee,backend=biber]{biblatex}
 \usepackage{pgfgantt}
+\usepackage{float}
 \usepackage{enumitem}
 \usepackage[toc,page]{appendix}
 \bibliography{progress-report}
@@ -181,7 +182,7 @@
 
             The amended risk matrix, with the risks mentioned above, is shown in figure~\ref{fig:risk_matrix}.
 
-            \begin{figure}
+            \begin{figure}[H]
                 \begin{center}
                     \begin{tabular}{| p{3cm} | l | l | p{4cm} |}
                         \hline
@@ -204,13 +205,30 @@
     
         \subsection{Further Work}
         \label{sub:further_work}
+
+            Benchmark suite selection for this project has been finalised, and the execution of those benchmarks is underway. With this in mind, there are two remaining tasks to be completed: Benchmark migration and accelerated benchmark testing and analysis. This section will detail the remaining tasks that are to be fulfilled as part of the project's completion.
+
+                \subsubsection{Benchmark Migration}
+                \label{sub:benchmark_migration}
+
+                    The next step after the completion of benchmarking without accelerated codes is to then port these codes to the hardware accelerator platforms outlined within the project's specification documentation. This will involve identifying areas that are most suitable for application to the accelerator's architecture. After this identification process has finished, the accelerator's API calls will be injected into the codes and this code tested. Once the code has been migrated to the accelerator, re-integration into the MapReduce model will take place.
+
+                \subsubsection{Accelerated Benchmark Testing and Analysis}
+                \label{sub:accelerated_benchmark_testing_and_analysis}
+
+                    After benchmark migration has been completed, a similar approach to the benchmarking procedure for unmodified codes will be undertaken. This will involve the execution of the accelerated benchmarks using both solid state and hard disk storage options. The input size for these benchmarks will also be varied as to provide an idea of how the solution(s) scale with data set size. This scaling may also show any points where data communications may oversaturate the accelerator nodes and overall reduce performance.
         
         % What to do from here?
         
         \subsection{Project Extensions}
         \label{sub:project_extensions}
-        
-        % Who can benefit from this work?
+
+            Whilst this project is in an area of research, it is possible that is can be put into commercial use. An example of this would be to highlight areas for migration to hardware accelerators for existing data intensive programs. The extensions of this project reflect some of the countless possibilities in which it could be used.
+
+            \begin{description}[style=nextline]
+                \item[\textbf{Additional Accelerator Types}] The research in this project is aimed only at GPGPU and MIC co-processor hardware accelerators, but other types such as Fully Programmable Gate Array (FPGA) or Application-specific Integrated Circuit (ASIC) accelerators could be used as well. These have the benefit of being highly optimised for a specific task, although this also acts as a limitation as ASICs cannot be reprogrammed to perform another type of workload, and FPGAs have a high development overhead associated with long program compilation times and difficulty with debugging.
+                \item[\textbf{Infrastructure Design}] This project's outcome could inform infrastructure providers such as Amazon or Google about the benefits to installing hardware accelerators into their compute nodes. This could reduce operational costs through the increased power efficiency of hardware accelerators. Compute time could also be drastically reduced, thus the number of users of the service could increase. Finally, the total number of compute nodes required for the same performance could drop, resulting in a reduced investment when purchasing infrastructure.
+            \end{description}
         
     \section{Conclusion}
     \label{sec:conclusion}
