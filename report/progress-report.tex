@@ -179,8 +179,6 @@
                     \label{fig:project-timetable}       
                 \end{sidewaysfigure}
         
-        % Talk about where we are in the original timetable, as well as what changes may need to be made to accomodate for problems with Chiron
-        
         \subsection{Risk Assessment}
         \label{sub:risk_assessment}
 
@@ -229,8 +227,6 @@
 
                     After benchmark migration has been completed, a similar approach to the benchmarking procedure for unmodified codes will be undertaken. This will involve the execution of the accelerated benchmarks using both solid state and hard disk storage options. The input size for these benchmarks will also be varied as to provide an idea of how the solution(s) scale with data set size. This scaling may also show any points where data communications may oversaturate the accelerator nodes and overall reduce performance.
         
-        % What to do from here?
-        
         \subsection{Project Extensions}
         \label{sub:project_extensions}
 
@@ -239,7 +235,7 @@
             \begin{description}[style=nextline]
                 \item[\textbf{Additional Accelerator Types}] The research in this project is aimed only at GPGPU and MIC co-processor hardware accelerators, but other types such as Fully Programmable Gate Array (FPGA) or Application-specific Integrated Circuit (ASIC) accelerators could be used as well. These have the benefit of being highly optimised for a specific task, although this also acts as a limitation as ASICs cannot be reprogrammed to perform another type of workload, and FPGAs have a high development overhead associated with long program compilation times and difficulty with debugging.
                 \item[\textbf{Infrastructure Design}] This project's outcome could inform infrastructure providers such as Amazon or Google about the benefits to installing hardware accelerators into their compute nodes. This could reduce operational costs through the increased power efficiency of hardware accelerators. Compute time could also be drastically reduced, thus the number of users of the service could increase. Finally, the total number of compute nodes required for the same performance could drop, resulting in a reduced investment when purchasing infrastructure.
-                \item[\textbf{Additional Workload Testing}] 
+                \item[\textbf{Additional Workload Testing}] This project only covers a small subset of the available workloads and benchmarks for data intensive compute. Other workloads could be examined and tested on hardware accelerators, providing a broader insight to the applicability of hardware accelerators in the data intensive compute paradigm. This could further guide researchers and organisations alike with their choices to start utilising accelerators where they are present.
             \end{description}
         
     \section{Conclusion}
